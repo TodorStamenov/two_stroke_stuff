@@ -1,30 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:two_stroke_stuff/utils/toaster.dart';
+import 'package:two_stroke_stuff/widgets/header.dart';
 import 'package:two_stroke_stuff/widgets/primary_action_button.dart';
 import 'dart:math';
 
-class Calculator extends StatefulWidget {
-  const Calculator({Key? key}) : super(key: key);
+class PortCalculator extends StatefulWidget {
+  const PortCalculator({Key? key}) : super(key: key);
 
   @override
-  State<Calculator> createState() => _CalculatorState();
+  State<PortCalculator> createState() => _PortCalculatorState();
 }
 
-class _CalculatorState extends State<Calculator> {
+class _PortCalculatorState extends State<PortCalculator> {
   String result = '';
 
   TextEditingController deckHeight = TextEditingController();
   TextEditingController rodLength = TextEditingController();
   TextEditingController stroke = TextEditingController();
   TextEditingController portDuration = TextEditingController();
-
-  void showToastMessage(String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.CENTER,
-    );
-  }
 
   void clearCalculation() {
     setState(() {
@@ -44,25 +37,25 @@ class _CalculatorState extends State<Calculator> {
       return;
     }
 
-    double targetPortDuration = double.parse(portDuration.text);
+    var targetPortDuration = double.parse(portDuration.text);
     if (targetPortDuration < 1 || 359 < targetPortDuration) {
       showToastMessage('Target port duration must be between 1 and 359 degrees!');
       return;
     }
 
-    double deck = double.parse(deckHeight.text);
-    double rod = double.parse(rodLength.text);
-    double radius = double.parse(stroke.text) / 2;
+    var deck = double.parse(deckHeight.text);
+    var rod = double.parse(rodLength.text);
+    var radius = double.parse(stroke.text) / 2;
 
     if (rod < 0 || deck < 0 || radius < 0) {
       showToastMessage('Rod Deck and Stroke must have positive value!');
       return;
     }
 
-    double degreesFromBdc = targetPortDuration / 2;
-    double y = cos(degreesFromBdc * pi / 180) * radius;
-    double z = sin(degreesFromBdc * pi / 180) * radius;
-    double x = sqrt(pow(rod, 2) - pow(z, 2)) - y;
+    var degreesFromBdc = targetPortDuration / 2;
+    var y = cos(degreesFromBdc * pi / 180) * radius;
+    var z = sin(degreesFromBdc * pi / 180) * radius;
+    var x = sqrt(pow(rod, 2) - pow(z, 2)) - y;
 
     setState(() {
       result = '${(rod + radius + deck - x).toStringAsFixed(2)} mm from deck';
@@ -72,17 +65,8 @@ class _CalculatorState extends State<Calculator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        title: const Text(
-          'Calculate Port Height',
-          style: TextStyle(
-            fontSize: 18,
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+      appBar: const Header(
+        title: 'Calculate Port Height',
       ),
       body: Center(
         child: SingleChildScrollView(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:two_stroke_stuff/pages/calculator.dart';
+import 'package:two_stroke_stuff/widgets/home.dart';
 
 void main() {
   Widget unfocusOnTap(Widget child) {
@@ -11,12 +11,9 @@ void main() {
 
   runApp(
     unfocusOnTap(
-      MaterialApp(
+      const MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.deepPurple,
-        ),
-        home: const Calculator(),
+        home: Home(),
       ),
     ),
   );
