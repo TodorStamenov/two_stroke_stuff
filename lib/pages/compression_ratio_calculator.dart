@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:two_stroke_stuff/utils/toaster.dart';
 import 'package:two_stroke_stuff/widgets/header.dart';
+import 'package:two_stroke_stuff/widgets/input_field.dart';
 import 'package:two_stroke_stuff/widgets/primary_action_button.dart';
 import 'dart:math';
 
@@ -72,96 +73,108 @@ class _CompressionRatioCalculatorState extends State<CompressionRatioCalculator>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const Header(
-        title: 'Calculate Compression Ratio',
+        title: 'Compression Ratio',
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(40),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFormField(
-                controller: head,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(
-                  labelText: 'Head Volume (cm3)',
-                ),
-              ),
-              const SizedBox(height: 50),
-              TextFormField(
-                controller: deck,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(
-                  labelText: 'Deck Height (mm)',
-                ),
-              ),
-              const SizedBox(height: 50),
-              TextFormField(
-                controller: gasket,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(
-                  labelText: 'Gasket Thicknes (mm)',
-                ),
-              ),
-              const SizedBox(height: 50),
-              TextFormField(
-                controller: piston,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(
-                  labelText: 'Piston Volume (cm3)',
-                ),
-              ),
-              const SizedBox(height: 50),
-              TextFormField(
-                controller: bore,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(
-                  labelText: 'Bore (mm)',
-                ),
-              ),
-              const SizedBox(height: 50),
-              TextFormField(
-                controller: stroke,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.done,
-                decoration: const InputDecoration(
-                  labelText: 'Stroke (mm)',
-                ),
-              ),
-              const SizedBox(height: 50),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  PrimaryActionButton(
-                    text: 'Clear',
-                    action: clearCalculation,
-                  ),
-                  const SizedBox(width: 10),
-                  PrimaryActionButton(
-                    text: 'Calculate',
-                    action: calculate,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 50),
-              Center(
-                child: Text(
-                  result,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(40),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: PrimaryInputField(
+                    textEditor: head,
+                    textInputType: TextInputType.number,
+                    textInputAction: TextInputAction.next,
+                    label: 'Head (cm3)',
                   ),
                 ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: PrimaryInputField(
+                    textEditor: deck,
+                    textInputType: TextInputType.number,
+                    textInputAction: TextInputAction.next,
+                    label: 'Deck (mm)',
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 50),
+            Row(
+              children: [
+                Expanded(
+                  child: PrimaryInputField(
+                    textEditor: gasket,
+                    textInputType: TextInputType.number,
+                    textInputAction: TextInputAction.next,
+                    label: 'Gasket (mm)',
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: PrimaryInputField(
+                    textEditor: piston,
+                    textInputType: TextInputType.number,
+                    textInputAction: TextInputAction.next,
+                    label: 'Piston (cm3)',
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 50),
+            Row(
+              children: [
+                Expanded(
+                  child: PrimaryInputField(
+                    textEditor: bore,
+                    textInputType: TextInputType.number,
+                    textInputAction: TextInputAction.next,
+                    label: 'Bore (mm)',
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: PrimaryInputField(
+                    textEditor: stroke,
+                    textInputType: TextInputType.number,
+                    textInputAction: TextInputAction.done,
+                    label: 'Stroke (mm)',
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 50),
+            Center(
+              child: Text(
+                result,
+                style: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 50),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                PrimaryActionButton(
+                  text: 'Clear',
+                  action: clearCalculation,
+                ),
+                const SizedBox(width: 10),
+                PrimaryActionButton(
+                  text: 'Calculate',
+                  action: calculate,
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+          ],
         ),
       ),
     );

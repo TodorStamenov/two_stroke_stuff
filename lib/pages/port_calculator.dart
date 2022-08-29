@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:two_stroke_stuff/utils/toaster.dart';
 import 'package:two_stroke_stuff/widgets/header.dart';
+import 'package:two_stroke_stuff/widgets/input_field.dart';
 import 'package:two_stroke_stuff/widgets/primary_action_button.dart';
 import 'dart:math';
 
@@ -66,78 +67,70 @@ class _PortCalculatorState extends State<PortCalculator> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const Header(
-        title: 'Calculate Port Height',
+        title: 'Port Height',
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(40),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFormField(
-                controller: deckHeight,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(
-                  labelText: 'Deck Height (mm)',
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(40),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 20),
+            PrimaryInputField(
+              textEditor: deckHeight,
+              textInputType: TextInputType.number,
+              textInputAction: TextInputAction.next,
+              label: 'Deck Height (mm)',
+            ),
+            const SizedBox(height: 50),
+            PrimaryInputField(
+              textEditor: rodLength,
+              textInputType: TextInputType.number,
+              textInputAction: TextInputAction.next,
+              label: 'Rod Length (mm)',
+            ),
+            const SizedBox(height: 50),
+            PrimaryInputField(
+              textEditor: stroke,
+              textInputType: TextInputType.number,
+              textInputAction: TextInputAction.next,
+              label: 'Stroke (mm)',
+            ),
+            const SizedBox(height: 50),
+            PrimaryInputField(
+              textEditor: portDuration,
+              textInputType: TextInputType.number,
+              textInputAction: TextInputAction.done,
+              label: 'Target Port Duration (deg)',
+            ),
+            const SizedBox(height: 50),
+            Center(
+              child: Text(
+                result,
+                style: const TextStyle(
+                  fontSize: 21,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 50),
-              TextFormField(
-                controller: rodLength,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(
-                  labelText: 'Rod Length (mm)',
+            ),
+            const SizedBox(height: 50),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                PrimaryActionButton(
+                  text: 'Clear',
+                  action: clearCalculation,
                 ),
-              ),
-              const SizedBox(height: 50),
-              TextFormField(
-                controller: stroke,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(
-                  labelText: 'Stroke (mm)',
+                const SizedBox(width: 10),
+                PrimaryActionButton(
+                  text: 'Calculate',
+                  action: calculate,
                 ),
-              ),
-              const SizedBox(height: 50),
-              TextFormField(
-                controller: portDuration,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.done,
-                decoration: const InputDecoration(
-                  labelText: 'Target Port Duration (deg)',
-                ),
-              ),
-              const SizedBox(height: 50),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  PrimaryActionButton(
-                    text: 'Clear',
-                    action: clearCalculation,
-                  ),
-                  const SizedBox(width: 10),
-                  PrimaryActionButton(
-                    text: 'Calculate',
-                    action: calculate,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 50),
-              Center(
-                child: Text(
-                  result,
-                  style: const TextStyle(
-                    fontSize: 21,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
+              ],
+            ),
+            const SizedBox(height: 10),
+          ],
         ),
       ),
     );
