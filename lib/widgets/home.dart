@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:two_stroke_stuff/pages/compression_ratio_calculator.dart';
-import 'package:two_stroke_stuff/pages/port_calculator.dart';
+import 'package:two_stroke_stuff/pages/calculation_history.dart';
+import 'package:two_stroke_stuff/pages/compression_ratio.dart';
+import 'package:two_stroke_stuff/pages/port_timing.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -12,8 +13,9 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int selectedIndex = 0;
   static const List<Widget> widgetOptions = [
-    PortCalculator(),
-    CompressionRatioCalculator(),
+    PortTiming(),
+    CompressionRatio(),
+    CalculationHistory(),
   ];
 
   void onItemTapped(int index) {
@@ -35,6 +37,10 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(
             icon: Icon(Icons.credit_card_sharp),
             label: 'Compression',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            label: 'History',
           ),
         ],
         currentIndex: selectedIndex,

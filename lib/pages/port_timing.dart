@@ -1,18 +1,23 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:two_stroke_stuff/models/port_timing_model.dart';
+import 'package:two_stroke_stuff/utils/storage.dart';
 import 'package:two_stroke_stuff/utils/toaster.dart';
 import 'package:two_stroke_stuff/widgets/header.dart';
 import 'package:two_stroke_stuff/widgets/input_field.dart';
 import 'package:two_stroke_stuff/widgets/primary_action_button.dart';
 import 'dart:math';
 
-class PortCalculator extends StatefulWidget {
-  const PortCalculator({Key? key}) : super(key: key);
+class PortTiming extends StatefulWidget {
+  const PortTiming({Key? key}) : super(key: key);
 
   @override
-  State<PortCalculator> createState() => _PortCalculatorState();
+  State<PortTiming> createState() => _PortTimingState();
 }
 
-class _PortCalculatorState extends State<PortCalculator> {
+class _PortTimingState extends State<PortTiming> {
+  double? portHeight;
   String result = '';
 
   TextEditingController deckHeight = TextEditingController();
@@ -58,8 +63,10 @@ class _PortCalculatorState extends State<PortCalculator> {
     var z = sin(degreesFromBdc * pi / 180) * radius;
     var x = sqrt(pow(rod, 2) - pow(z, 2)) - y;
 
+    portHeight = double.parse((rod + radius + deck - x).toStringAsFixed(2));
+
     setState(() {
-      result = '${(rod + radius + deck - x).toStringAsFixed(2)} mm from deck';
+      result = '${portHeight?.toStringAsFixed(2)} mm from deck';
     });
   }
 
@@ -116,7 +123,7 @@ class _PortCalculatorState extends State<PortCalculator> {
             ),
             const SizedBox(height: 50),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 PrimaryActionButton(
                   text: 'Clear',
@@ -124,10 +131,38 @@ class _PortCalculatorState extends State<PortCalculator> {
                 ),
                 const SizedBox(width: 10),
                 PrimaryActionButton(
-                  text: 'Calculate',
-                  action: calculate,
+                  text: 'Save',
+                  action: () {
+                    if (result == '') {
+                      showToastMessage('First you have to execute calculation!');
+                      return;
+                    }
+
+                    FocusManager.instance.primaryFocus?.unfocus();
+                    Storage.prefs?.setString(
+                      'port',
+                      jsonEncode(
+                        PortTimingModel(
+                          deck: double.parse(deckHeight.text),
+                          rod: double.parse(rodLength.text),
+                          stroke: double.parse(stroke.text),
+                          targetPort: double.parse(portDuration.text),
+                          portHeight: portHeight!,
+                        ),
+                      ),
+                    );
+
+                    showToastMessage('Calculation saved successfully!');
+                  },
                 ),
               ],
+            ),
+            const SizedBox(height: 10),
+            Center(
+              child: PrimaryActionButton(
+                text: 'Calculate',
+                action: calculate,
+              ),
             ),
             const SizedBox(height: 10),
           ],

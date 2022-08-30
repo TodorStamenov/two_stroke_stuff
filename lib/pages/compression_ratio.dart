@@ -1,18 +1,24 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:two_stroke_stuff/models/compression_ratio_model.dart';
+import 'package:two_stroke_stuff/utils/storage.dart';
 import 'package:two_stroke_stuff/utils/toaster.dart';
 import 'package:two_stroke_stuff/widgets/header.dart';
 import 'package:two_stroke_stuff/widgets/input_field.dart';
 import 'package:two_stroke_stuff/widgets/primary_action_button.dart';
 import 'dart:math';
 
-class CompressionRatioCalculator extends StatefulWidget {
-  const CompressionRatioCalculator({Key? key}) : super(key: key);
+class CompressionRatio extends StatefulWidget {
+  const CompressionRatio({Key? key}) : super(key: key);
 
   @override
-  State<CompressionRatioCalculator> createState() => _CompressionRatioCalculatorState();
+  State<CompressionRatio> createState() => _CompressionRatioState();
 }
 
-class _CompressionRatioCalculatorState extends State<CompressionRatioCalculator> {
+class _CompressionRatioState extends State<CompressionRatio> {
+  double? volume;
+  double? compressionRatio;
   String result = '';
 
   TextEditingController head = TextEditingController();
@@ -61,8 +67,11 @@ class _CompressionRatioCalculatorState extends State<CompressionRatioCalculator>
     var chamberVolume = headVolume + pistonVolume + gasketVolume + deckVolume;
     var compressionRatio = (chamberVolume + cylinderVolume) / chamberVolume;
 
-    var text = 'Displacement: ${cylinderVolume.toStringAsFixed(2)} cm3\n';
-    text += 'Static Compression Ratio: ${compressionRatio.toStringAsFixed(2)}:1';
+    volume = double.parse(cylinderVolume.toStringAsFixed(2));
+    this.compressionRatio = double.parse(compressionRatio.toStringAsFixed(2));
+
+    var text = 'Displacement: ${volume?.toStringAsFixed(2)} cm3\n\n';
+    text += 'Static Compression Ratio: ${this.compressionRatio?.toStringAsFixed(2)}:1';
 
     setState(() {
       result = text;
@@ -160,7 +169,7 @@ class _CompressionRatioCalculatorState extends State<CompressionRatioCalculator>
             ),
             const SizedBox(height: 50),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 PrimaryActionButton(
                   text: 'Clear',
@@ -168,10 +177,41 @@ class _CompressionRatioCalculatorState extends State<CompressionRatioCalculator>
                 ),
                 const SizedBox(width: 10),
                 PrimaryActionButton(
-                  text: 'Calculate',
-                  action: calculate,
+                  text: 'Save',
+                  action: () {
+                    if (result == '') {
+                      showToastMessage('First you have to execute calculation!');
+                      return;
+                    }
+
+                    FocusManager.instance.primaryFocus?.unfocus();
+                    Storage.prefs?.setString(
+                      'compression',
+                      jsonEncode(
+                        CompressionRatioModel(
+                          head: double.parse(head.text),
+                          deck: double.parse(deck.text),
+                          gasket: double.parse(gasket.text),
+                          piston: double.parse(piston.text),
+                          bore: double.parse(bore.text),
+                          stroke: double.parse(stroke.text),
+                          volume: volume!,
+                          compressionRatio: compressionRatio!,
+                        ),
+                      ),
+                    );
+
+                    showToastMessage('Calculation saved successfully!');
+                  },
                 ),
               ],
+            ),
+            const SizedBox(height: 10),
+            Center(
+              child: PrimaryActionButton(
+                text: 'Calculate',
+                action: calculate,
+              ),
             ),
             const SizedBox(height: 10),
           ],
