@@ -32,7 +32,7 @@ class _HomeState extends State<Home> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.camera),
-            label: 'Port Timing',
+            label: 'Port',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.credit_card_sharp),

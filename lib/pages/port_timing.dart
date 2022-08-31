@@ -70,7 +70,7 @@ class _PortTimingState extends State<PortTiming> {
     portHeightResult = double.parse((rod + radius + deck - x).toStringAsFixed(2));
 
     setState(() {
-      result = '${portHeightResult?.toStringAsFixed(2)} mm from deck';
+      result = 'Port Height: ${portHeightResult?.toStringAsFixed(2)} mm';
     });
   }
 
@@ -139,7 +139,10 @@ class _PortTimingState extends State<PortTiming> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Port Height'),
+                const Text(
+                  'Port Height',
+                  style: TextStyle(fontSize: 17),
+                ),
                 const SizedBox(width: 10),
                 Switch(
                   value: isPortDuration,
@@ -152,7 +155,10 @@ class _PortTimingState extends State<PortTiming> {
                   },
                 ),
                 const SizedBox(width: 10),
-                const Text('Port Duration'),
+                const Text(
+                  'Port Duration',
+                  style: TextStyle(fontSize: 17),
+                ),
               ],
             ),
             const SizedBox(height: 50),
@@ -190,7 +196,7 @@ class _PortTimingState extends State<PortTiming> {
                 textEditor: portHeight,
                 textInputType: TextInputType.number,
                 textInputAction: TextInputAction.done,
-                label: 'Target Port Height (mm)',
+                label: 'Current Port Height (mm)',
               ),
             ] else ...[
               PrimaryInputField(
