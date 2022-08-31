@@ -21,14 +21,14 @@ class CompressionRatioModel {
 
   factory CompressionRatioModel.fromJson(Map<String, dynamic> json) {
     return CompressionRatioModel(
-      head: json['head'],
-      deck: json['deck'],
-      gasket: json['gasket'],
-      piston: json['piston'],
-      bore: json['bore'],
-      stroke: json['stroke'],
-      volume: json['volume'],
-      compressionRatio: json['compressionRatio'],
+      head: json['head'] ?? 0,
+      deck: json['deck'] ?? 0,
+      gasket: json['gasket'] ?? 0,
+      piston: json['piston'] ?? 0,
+      bore: json['bore'] ?? 0,
+      stroke: json['stroke'] ?? 0,
+      volume: json['volume'] ?? 0,
+      compressionRatio: json['compressionRatio'] ?? 0,
     );
   }
 

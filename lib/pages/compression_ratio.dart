@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:two_stroke_stuff/models/compression_ratio_model.dart';
@@ -7,7 +8,6 @@ import 'package:two_stroke_stuff/utils/toaster.dart';
 import 'package:two_stroke_stuff/widgets/header.dart';
 import 'package:two_stroke_stuff/widgets/input_field.dart';
 import 'package:two_stroke_stuff/widgets/primary_action_button.dart';
-import 'dart:math';
 
 class CompressionRatio extends StatefulWidget {
   const CompressionRatio({Key? key}) : super(key: key);
@@ -76,6 +76,32 @@ class _CompressionRatioState extends State<CompressionRatio> {
     setState(() {
       result = text;
     });
+  }
+
+  void saveCalculation() {
+    if (result == '') {
+      showToastMessage('First you have to execute calculation!');
+      return;
+    }
+
+    FocusManager.instance.primaryFocus?.unfocus();
+    Storage.prefs?.setString(
+      'compression',
+      jsonEncode(
+        CompressionRatioModel(
+          head: double.parse(head.text),
+          deck: double.parse(deck.text),
+          gasket: double.parse(gasket.text),
+          piston: double.parse(piston.text),
+          bore: double.parse(bore.text),
+          stroke: double.parse(stroke.text),
+          volume: volume!,
+          compressionRatio: compressionRatio!,
+        ),
+      ),
+    );
+
+    showToastMessage('Calculation saved successfully!');
   }
 
   @override
@@ -178,31 +204,7 @@ class _CompressionRatioState extends State<CompressionRatio> {
                 const SizedBox(width: 10),
                 PrimaryActionButton(
                   text: 'Save',
-                  action: () {
-                    if (result == '') {
-                      showToastMessage('First you have to execute calculation!');
-                      return;
-                    }
-
-                    FocusManager.instance.primaryFocus?.unfocus();
-                    Storage.prefs?.setString(
-                      'compression',
-                      jsonEncode(
-                        CompressionRatioModel(
-                          head: double.parse(head.text),
-                          deck: double.parse(deck.text),
-                          gasket: double.parse(gasket.text),
-                          piston: double.parse(piston.text),
-                          bore: double.parse(bore.text),
-                          stroke: double.parse(stroke.text),
-                          volume: volume!,
-                          compressionRatio: compressionRatio!,
-                        ),
-                      ),
-                    );
-
-                    showToastMessage('Calculation saved successfully!');
-                  },
+                  action: saveCalculation,
                 ),
               ],
             ),

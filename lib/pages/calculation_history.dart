@@ -85,20 +85,18 @@ class _CalculationHistoryState extends State<CalculationHistory> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Target Port Duration: ${portTiming.targetPort} deg',
+              'Port Duration: ${portTiming.portDuration.toStringAsFixed(2)} deg',
               style: const TextStyle(
                 fontSize: 18,
                 color: Colors.black,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             Text(
-              '${portTiming.portHeight} mm from deck',
-              textAlign: TextAlign.center,
+              'Port Height: ${portTiming.portHeight.toStringAsFixed(2)} mm',
               style: const TextStyle(
                 fontSize: 18,
                 color: Colors.black,
-                fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 20),
