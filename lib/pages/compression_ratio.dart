@@ -116,7 +116,7 @@ class _CompressionRatioState extends State<CompressionRatio> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             Row(
               children: [
                 Expanded(
@@ -195,7 +195,7 @@ class _CompressionRatioState extends State<CompressionRatio> {
             ),
             const SizedBox(height: 50),
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 PrimaryActionButton(
                   text: 'Clear',

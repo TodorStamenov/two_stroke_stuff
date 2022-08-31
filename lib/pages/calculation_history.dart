@@ -100,16 +100,27 @@ class _CalculationHistoryState extends State<CalculationHistory> {
               ),
             ),
             const SizedBox(height: 20),
-            Center(
-              child: PrimaryActionButton(
-                text: 'Clear',
-                action: () {
-                  Storage.prefs?.setString('port', jsonEncode(PortTimingModel()));
-                  setState(() {
-                    portTiming = PortTimingModel();
-                  });
-                },
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                PrimaryActionButton(
+                  text: 'Clear',
+                  action: () {
+                    Storage.prefs?.setString(
+                      'port',
+                      jsonEncode(PortTimingModel()),
+                    );
+                    setState(() {
+                      portTiming = PortTimingModel();
+                    });
+                  },
+                ),
+                const SizedBox(width: 10),
+                PrimaryActionButton(
+                  text: 'Load',
+                  action: () {},
+                ),
+              ],
             ),
             const SizedBox(height: 20),
             const Text(
@@ -180,16 +191,27 @@ class _CalculationHistoryState extends State<CalculationHistory> {
               ),
             ),
             const SizedBox(height: 20),
-            Center(
-              child: PrimaryActionButton(
-                text: 'Clear',
-                action: () {
-                  Storage.prefs?.setString('compression', jsonEncode(CompressionRatioModel()));
-                  setState(() {
-                    compressionRatio = CompressionRatioModel();
-                  });
-                },
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                PrimaryActionButton(
+                  text: 'Clear',
+                  action: () {
+                    Storage.prefs?.setString(
+                      'compression',
+                      jsonEncode(CompressionRatioModel()),
+                    );
+                    setState(() {
+                      compressionRatio = CompressionRatioModel();
+                    });
+                  },
+                ),
+                const SizedBox(width: 10),
+                PrimaryActionButton(
+                  text: 'Load',
+                  action: () {},
+                ),
+              ],
             ),
           ],
         ),

@@ -135,13 +135,13 @@ class _PortTimingState extends State<PortTiming> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
                   'Port Height',
-                  style: TextStyle(fontSize: 17),
+                  style: TextStyle(fontSize: 18),
                 ),
                 const SizedBox(width: 10),
                 Switch(
@@ -157,11 +157,11 @@ class _PortTimingState extends State<PortTiming> {
                 const SizedBox(width: 10),
                 const Text(
                   'Port Duration',
-                  style: TextStyle(fontSize: 17),
+                  style: TextStyle(fontSize: 18),
                 ),
               ],
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 30),
             Row(
               children: [
                 Expanded(
@@ -219,7 +219,7 @@ class _PortTimingState extends State<PortTiming> {
             ),
             const SizedBox(height: 50),
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 PrimaryActionButton(
                   text: 'Clear',
