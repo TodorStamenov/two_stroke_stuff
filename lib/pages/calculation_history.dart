@@ -15,8 +15,8 @@ class CalculationHistory extends StatefulWidget {
 }
 
 class _CalculationHistoryState extends State<CalculationHistory> {
-  PortTimingModel portTiming = PortTimingModel();
-  CompressionRatioModel compressionRatio = CompressionRatioModel();
+  PortTimingModel _portTiming = PortTimingModel();
+  CompressionRatioModel _compressionRatio = CompressionRatioModel();
 
   void initModels() {
     if (Storage.prefs?.getString('port') == null) {
@@ -27,8 +27,8 @@ class _CalculationHistoryState extends State<CalculationHistory> {
       Storage.prefs?.setString('compression', jsonEncode(CompressionRatioModel()));
     }
 
-    portTiming = PortTimingModel.fromJson(jsonDecode((Storage.prefs?.getString('port'))!));
-    compressionRatio = CompressionRatioModel.fromJson(jsonDecode((Storage.prefs?.getString('compression'))!));
+    _portTiming = PortTimingModel.fromJson(jsonDecode((Storage.prefs?.getString('port'))!));
+    _compressionRatio = CompressionRatioModel.fromJson(jsonDecode((Storage.prefs?.getString('compression'))!));
   }
 
   @override
@@ -61,7 +61,7 @@ class _CalculationHistoryState extends State<CalculationHistory> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Deck: ${portTiming.deck} mm',
+              'Deck: ${_portTiming.deck} mm',
               style: const TextStyle(
                 fontSize: 18,
                 color: Colors.black,
@@ -69,7 +69,7 @@ class _CalculationHistoryState extends State<CalculationHistory> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Rod Length: ${portTiming.rod} mm',
+              'Rod Length: ${_portTiming.rod} mm',
               style: const TextStyle(
                 fontSize: 18,
                 color: Colors.black,
@@ -77,7 +77,7 @@ class _CalculationHistoryState extends State<CalculationHistory> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Stroke: ${portTiming.stroke} mm',
+              'Stroke: ${_portTiming.stroke} mm',
               style: const TextStyle(
                 fontSize: 18,
                 color: Colors.black,
@@ -85,7 +85,7 @@ class _CalculationHistoryState extends State<CalculationHistory> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Port Duration: ${portTiming.portDuration.toStringAsFixed(2)} deg',
+              'Port Duration: ${_portTiming.portDuration.toStringAsFixed(2)} deg',
               style: const TextStyle(
                 fontSize: 18,
                 color: Colors.black,
@@ -93,7 +93,7 @@ class _CalculationHistoryState extends State<CalculationHistory> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Port Height: ${portTiming.portHeight.toStringAsFixed(2)} mm',
+              'Port Height: ${_portTiming.portHeight.toStringAsFixed(2)} mm',
               style: const TextStyle(
                 fontSize: 18,
                 color: Colors.black,
@@ -111,7 +111,7 @@ class _CalculationHistoryState extends State<CalculationHistory> {
                       jsonEncode(PortTimingModel()),
                     );
                     setState(() {
-                      portTiming = PortTimingModel();
+                      _portTiming = PortTimingModel();
                     });
                   },
                 ),
@@ -134,7 +134,7 @@ class _CalculationHistoryState extends State<CalculationHistory> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Head: ${compressionRatio.head} cm3',
+              'Head: ${_compressionRatio.head} cm3',
               style: const TextStyle(
                 fontSize: 18,
                 color: Colors.black,
@@ -142,7 +142,7 @@ class _CalculationHistoryState extends State<CalculationHistory> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Deck: ${compressionRatio.deck} mm',
+              'Deck: ${_compressionRatio.deck} mm',
               style: const TextStyle(
                 fontSize: 18,
                 color: Colors.black,
@@ -150,7 +150,7 @@ class _CalculationHistoryState extends State<CalculationHistory> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Gasket: ${compressionRatio.gasket} mm',
+              'Gasket: ${_compressionRatio.gasket} mm',
               style: const TextStyle(
                 fontSize: 18,
                 color: Colors.black,
@@ -158,7 +158,7 @@ class _CalculationHistoryState extends State<CalculationHistory> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Piston: ${compressionRatio.piston} cm3',
+              'Piston: ${_compressionRatio.piston} cm3',
               style: const TextStyle(
                 fontSize: 18,
                 color: Colors.black,
@@ -166,7 +166,7 @@ class _CalculationHistoryState extends State<CalculationHistory> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Bore: ${compressionRatio.bore} mm',
+              'Bore: ${_compressionRatio.bore} mm',
               style: const TextStyle(
                 fontSize: 18,
                 color: Colors.black,
@@ -174,7 +174,7 @@ class _CalculationHistoryState extends State<CalculationHistory> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Stroke: ${compressionRatio.stroke} mm',
+              'Stroke: ${_compressionRatio.stroke} mm',
               style: const TextStyle(
                 fontSize: 18,
                 color: Colors.black,
@@ -182,7 +182,7 @@ class _CalculationHistoryState extends State<CalculationHistory> {
             ),
             const SizedBox(height: 20),
             Text(
-              'Displacement: ${compressionRatio.volume} cm3\nStatic Compression Ratio: ${compressionRatio.compressionRatio}:1',
+              'Displacement: ${_compressionRatio.volume} cm3\nStatic Compression Ratio: ${_compressionRatio.compressionRatio}:1',
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 18,
@@ -202,7 +202,7 @@ class _CalculationHistoryState extends State<CalculationHistory> {
                       jsonEncode(CompressionRatioModel()),
                     );
                     setState(() {
-                      compressionRatio = CompressionRatioModel();
+                      _compressionRatio = CompressionRatioModel();
                     });
                   },
                 ),

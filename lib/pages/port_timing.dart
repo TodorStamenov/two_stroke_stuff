@@ -17,91 +17,91 @@ class PortTiming extends StatefulWidget {
 }
 
 class _PortTimingState extends State<PortTiming> {
-  String result = '';
-  double? portHeightResult;
-  double? portDurationResult;
-  bool isPortDuration = false;
+  String _result = '';
+  double? _portHeightResult;
+  double? _portDurationResult;
+  bool _isPortDuration = false;
 
-  TextEditingController deckHeight = TextEditingController();
-  TextEditingController rodLength = TextEditingController();
-  TextEditingController stroke = TextEditingController();
-  TextEditingController portDuration = TextEditingController();
-  TextEditingController portHeight = TextEditingController();
+  final TextEditingController _deckHeight = TextEditingController();
+  final TextEditingController _rodLength = TextEditingController();
+  final TextEditingController _stroke = TextEditingController();
+  final TextEditingController _portDuration = TextEditingController();
+  final TextEditingController _portHeight = TextEditingController();
 
   void clearCalculation() {
     setState(() {
-      deckHeight.clear();
-      rodLength.clear();
-      stroke.clear();
-      portDuration.clear();
-      portHeight.clear();
+      _deckHeight.clear();
+      _rodLength.clear();
+      _stroke.clear();
+      _portDuration.clear();
+      _portHeight.clear();
 
-      result = '';
+      _result = '';
       FocusManager.instance.primaryFocus?.unfocus();
     });
   }
 
   void calculateDeckHeight() {
-    if (deckHeight.text == '' || rodLength.text == '' || stroke.text == '' || portDuration.text == '') {
+    if (_deckHeight.text == '' || _rodLength.text == '' || _stroke.text == '' || _portDuration.text == '') {
       showToastMessage('All inputs are required!');
       return;
     }
 
-    var targetPortDuration = double.parse(portDuration.text);
+    final targetPortDuration = double.parse(_portDuration.text);
     if (targetPortDuration < 1 || 359 < targetPortDuration) {
       showToastMessage('Target port duration must be between 1 and 359 degrees!');
       return;
     }
 
-    var deck = double.parse(deckHeight.text);
-    var rod = double.parse(rodLength.text);
-    var radius = double.parse(stroke.text) / 2;
+    final deck = double.parse(_deckHeight.text);
+    final rod = double.parse(_rodLength.text);
+    final radius = double.parse(_stroke.text) / 2;
 
     if (rod < 0 || deck < 0 || radius < 0) {
       showToastMessage('Rod Deck and Stroke must have positive value!');
       return;
     }
 
-    var degreesFromBdc = targetPortDuration / 2;
-    var y = cos(degreesFromBdc * pi / 180) * radius;
-    var z = sin(degreesFromBdc * pi / 180) * radius;
-    var x = sqrt(pow(rod, 2) - pow(z, 2)) - y;
+    final degreesFromBdc = targetPortDuration / 2;
+    final y = cos(degreesFromBdc * pi / 180) * radius;
+    final z = sin(degreesFromBdc * pi / 180) * radius;
+    final x = sqrt(pow(rod, 2) - pow(z, 2)) - y;
 
-    portHeightResult = double.parse((rod + radius + deck - x).toStringAsFixed(2));
+    _portHeightResult = double.parse((rod + radius + deck - x).toStringAsFixed(2));
 
     setState(() {
-      result = 'Port Height: ${portHeightResult?.toStringAsFixed(2)} mm';
+      _result = 'Port Height: ${_portHeightResult?.toStringAsFixed(2)} mm';
     });
   }
 
   void calculatePortDuration() {
-    if (deckHeight.text == '' || rodLength.text == '' || stroke.text == '' || portHeight.text == '') {
+    if (_deckHeight.text == '' || _rodLength.text == '' || _stroke.text == '' || _portHeight.text == '') {
       showToastMessage('All inputs are required!');
       return;
     }
 
-    var deck = double.parse(deckHeight.text);
-    var rod = double.parse(rodLength.text);
-    var radius = double.parse(stroke.text) / 2;
-    var targetPortHeight = double.parse(portHeight.text);
+    final deck = double.parse(_deckHeight.text);
+    final rod = double.parse(_rodLength.text);
+    final radius = double.parse(_stroke.text) / 2;
+    final targetPortHeight = double.parse(_portHeight.text);
 
     if (rod < 0 || deck < 0 || radius < 0 || targetPortHeight < 0) {
       showToastMessage('Rod Deck Stroke and Port Height must have positive value!');
       return;
     }
 
-    var x = deck + rod + radius - targetPortHeight;
-    var angle = (pow(radius, 2) + pow(x, 2) - pow(rod, 2)) / (2 * radius * x);
+    final x = deck + rod + radius - targetPortHeight;
+    final angle = (pow(radius, 2) + pow(x, 2) - pow(rod, 2)) / (2 * radius * x);
 
-    portDurationResult = 180 - (acos(angle) * 180 / pi);
+    _portDurationResult = (180 - (acos(angle) * 180 / pi)) * 2;
 
     setState(() {
-      result = 'Port Duration: ${portDurationResult?.toStringAsFixed(2)} deg';
+      _result = 'Port Duration: ${_portDurationResult?.toStringAsFixed(2)} deg';
     });
   }
 
   void saveCalculation() {
-    if (result == '') {
+    if (_result == '') {
       showToastMessage('First you have to execute calculation!');
       return;
     }
@@ -111,11 +111,11 @@ class _PortTimingState extends State<PortTiming> {
       'port',
       jsonEncode(
         PortTimingModel(
-          deck: double.parse(deckHeight.text),
-          rod: double.parse(rodLength.text),
-          stroke: double.parse(stroke.text),
-          portHeight: !isPortDuration ? portHeightResult! : double.parse(portHeight.text),
-          portDuration: isPortDuration ? portDurationResult! : double.parse(portDuration.text),
+          deck: double.parse(_deckHeight.text),
+          rod: double.parse(_rodLength.text),
+          stroke: double.parse(_stroke.text),
+          portHeight: !_isPortDuration ? _portHeightResult! : double.parse(_portHeight.text),
+          portDuration: _isPortDuration ? _portDurationResult! : double.parse(_portDuration.text),
         ),
       ),
     );
@@ -145,11 +145,11 @@ class _PortTimingState extends State<PortTiming> {
                 ),
                 const SizedBox(width: 10),
                 Switch(
-                  value: isPortDuration,
+                  value: _isPortDuration,
                   activeColor: Colors.deepPurple,
                   onChanged: (bool value) {
                     setState(() {
-                      isPortDuration = value;
+                      _isPortDuration = value;
                       clearCalculation();
                     });
                   },
@@ -166,7 +166,7 @@ class _PortTimingState extends State<PortTiming> {
               children: [
                 Expanded(
                   child: PrimaryInputField(
-                    textEditor: deckHeight,
+                    textEditor: _deckHeight,
                     textInputType: TextInputType.number,
                     textInputAction: TextInputAction.next,
                     label: 'Deck Height (mm)',
@@ -175,7 +175,7 @@ class _PortTimingState extends State<PortTiming> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: PrimaryInputField(
-                    textEditor: rodLength,
+                    textEditor: _rodLength,
                     textInputType: TextInputType.number,
                     textInputAction: TextInputAction.next,
                     label: 'Rod Length (mm)',
@@ -185,22 +185,22 @@ class _PortTimingState extends State<PortTiming> {
             ),
             const SizedBox(height: 50),
             PrimaryInputField(
-              textEditor: stroke,
+              textEditor: _stroke,
               textInputType: TextInputType.number,
               textInputAction: TextInputAction.next,
               label: 'Stroke (mm)',
             ),
             const SizedBox(height: 50),
-            if (isPortDuration) ...[
+            if (_isPortDuration) ...[
               PrimaryInputField(
-                textEditor: portHeight,
+                textEditor: _portHeight,
                 textInputType: TextInputType.number,
                 textInputAction: TextInputAction.done,
                 label: 'Current Port Height (mm)',
               ),
             ] else ...[
               PrimaryInputField(
-                textEditor: portDuration,
+                textEditor: _portDuration,
                 textInputType: TextInputType.number,
                 textInputAction: TextInputAction.done,
                 label: 'Target Port Duration (deg)',
@@ -209,7 +209,7 @@ class _PortTimingState extends State<PortTiming> {
             const SizedBox(height: 50),
             Center(
               child: Text(
-                result,
+                _result,
                 style: const TextStyle(
                   fontSize: 21,
                   color: Colors.black,
@@ -237,7 +237,7 @@ class _PortTimingState extends State<PortTiming> {
               child: PrimaryActionButton(
                 text: 'Calculate',
                 action: () {
-                  if (isPortDuration) {
+                  if (_isPortDuration) {
                     calculatePortDuration();
                   } else {
                     calculateDeckHeight();

@@ -1,27 +1,30 @@
 import 'package:flutter/material.dart';
 
 class PrimaryInputField extends StatelessWidget {
-  final TextEditingController textEditor;
-  final TextInputType textInputType;
-  final TextInputAction textInputAction;
-  final String label;
+  final String _label;
+  final TextInputType _textInputType;
+  final TextInputAction _textInputAction;
+  final TextEditingController _textEditor;
 
   const PrimaryInputField({
-    required this.textEditor,
-    required this.textInputType,
-    required this.textInputAction,
-    required this.label,
-  });
+    required String label,
+    required TextInputType textInputType,
+    required TextInputAction textInputAction,
+    required TextEditingController textEditor,
+  })  : _label = label,
+        _textInputType = textInputType,
+        _textInputAction = textInputAction,
+        _textEditor = textEditor;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: textEditor,
-      keyboardType: textInputType,
-      textInputAction: textInputAction,
+      controller: _textEditor,
+      keyboardType: _textInputType,
+      textInputAction: _textInputAction,
       cursorColor: Colors.deepPurple,
       decoration: InputDecoration(
-        labelText: label,
+        labelText: _label,
         labelStyle: const TextStyle(
           color: Colors.grey,
         ),

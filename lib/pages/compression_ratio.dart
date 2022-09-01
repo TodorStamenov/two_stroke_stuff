@@ -17,69 +17,69 @@ class CompressionRatio extends StatefulWidget {
 }
 
 class _CompressionRatioState extends State<CompressionRatio> {
-  double? volume;
-  double? compressionRatio;
-  String result = '';
+  double? _volume;
+  double? _compressionRatio;
+  String _result = '';
 
-  TextEditingController head = TextEditingController();
-  TextEditingController deck = TextEditingController();
-  TextEditingController gasket = TextEditingController();
-  TextEditingController piston = TextEditingController();
-  TextEditingController bore = TextEditingController();
-  TextEditingController stroke = TextEditingController();
+  final TextEditingController _head = TextEditingController();
+  final TextEditingController _deck = TextEditingController();
+  final TextEditingController _gasket = TextEditingController();
+  final TextEditingController _piston = TextEditingController();
+  final TextEditingController _bore = TextEditingController();
+  final TextEditingController _stroke = TextEditingController();
 
   void clearCalculation() {
     setState(() {
-      head.clear();
-      deck.clear();
-      gasket.clear();
-      piston.clear();
-      bore.clear();
-      stroke.clear();
+      _head.clear();
+      _deck.clear();
+      _gasket.clear();
+      _piston.clear();
+      _bore.clear();
+      _stroke.clear();
 
-      result = '';
+      _result = '';
       FocusManager.instance.primaryFocus?.unfocus();
     });
   }
 
   void calculate() {
-    if (head.text == '' ||
-        deck.text == '' ||
-        gasket.text == '' ||
-        piston.text == '' ||
-        bore.text == '' ||
-        stroke.text == '') {
+    if (_head.text == '' ||
+        _deck.text == '' ||
+        _gasket.text == '' ||
+        _piston.text == '' ||
+        _bore.text == '' ||
+        _stroke.text == '') {
       showToastMessage('All inputs are required!');
       return;
     }
 
-    var headVolume = double.parse(head.text);
-    var deckHeight = double.parse(deck.text) / 10;
-    var gasketHeight = double.parse(gasket.text) / 10;
-    var pistonVolume = double.parse(piston.text);
-    var boreSize = double.parse(bore.text) / 10;
-    var strokeLength = double.parse(stroke.text) / 10;
+    final headVolume = double.parse(_head.text);
+    final deckHeight = double.parse(_deck.text) / 10;
+    final gasketHeight = double.parse(_gasket.text) / 10;
+    final pistonVolume = double.parse(_piston.text);
+    final boreSize = double.parse(_bore.text) / 10;
+    final strokeLength = double.parse(_stroke.text) / 10;
 
-    var boreArea = pi * boreSize * boreSize / 4;
-    var gasketVolume = boreArea * gasketHeight;
-    var deckVolume = boreArea * deckHeight;
-    var cylinderVolume = boreArea * strokeLength;
-    var chamberVolume = headVolume + pistonVolume + gasketVolume + deckVolume;
-    var compressionRatio = (chamberVolume + cylinderVolume) / chamberVolume;
+    final boreArea = pi * boreSize * boreSize / 4;
+    final gasketVolume = boreArea * gasketHeight;
+    final deckVolume = boreArea * deckHeight;
+    final cylinderVolume = boreArea * strokeLength;
+    final chamberVolume = headVolume + pistonVolume + gasketVolume + deckVolume;
+    final compressionRatio = (chamberVolume + cylinderVolume) / chamberVolume;
 
-    volume = double.parse(cylinderVolume.toStringAsFixed(2));
-    this.compressionRatio = double.parse(compressionRatio.toStringAsFixed(2));
+    _volume = double.parse(cylinderVolume.toStringAsFixed(2));
+    _compressionRatio = double.parse(compressionRatio.toStringAsFixed(2));
 
-    var text = 'Displacement: ${volume?.toStringAsFixed(2)} cm3\n\n';
-    text += 'Static Compression Ratio: ${this.compressionRatio?.toStringAsFixed(2)}:1';
+    var text = 'Displacement: ${_volume?.toStringAsFixed(2)} cm3\n\n';
+    text += 'Static Compression Ratio: ${_compressionRatio?.toStringAsFixed(2)}:1';
 
     setState(() {
-      result = text;
+      _result = text;
     });
   }
 
   void saveCalculation() {
-    if (result == '') {
+    if (_result == '') {
       showToastMessage('First you have to execute calculation!');
       return;
     }
@@ -89,14 +89,14 @@ class _CompressionRatioState extends State<CompressionRatio> {
       'compression',
       jsonEncode(
         CompressionRatioModel(
-          head: double.parse(head.text),
-          deck: double.parse(deck.text),
-          gasket: double.parse(gasket.text),
-          piston: double.parse(piston.text),
-          bore: double.parse(bore.text),
-          stroke: double.parse(stroke.text),
-          volume: volume!,
-          compressionRatio: compressionRatio!,
+          head: double.parse(_head.text),
+          deck: double.parse(_deck.text),
+          gasket: double.parse(_gasket.text),
+          piston: double.parse(_piston.text),
+          bore: double.parse(_bore.text),
+          stroke: double.parse(_stroke.text),
+          volume: _volume!,
+          compressionRatio: _compressionRatio!,
         ),
       ),
     );
@@ -121,7 +121,7 @@ class _CompressionRatioState extends State<CompressionRatio> {
               children: [
                 Expanded(
                   child: PrimaryInputField(
-                    textEditor: head,
+                    textEditor: _head,
                     textInputType: TextInputType.number,
                     textInputAction: TextInputAction.next,
                     label: 'Head (cm3)',
@@ -130,7 +130,7 @@ class _CompressionRatioState extends State<CompressionRatio> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: PrimaryInputField(
-                    textEditor: deck,
+                    textEditor: _deck,
                     textInputType: TextInputType.number,
                     textInputAction: TextInputAction.next,
                     label: 'Deck (mm)',
@@ -143,7 +143,7 @@ class _CompressionRatioState extends State<CompressionRatio> {
               children: [
                 Expanded(
                   child: PrimaryInputField(
-                    textEditor: gasket,
+                    textEditor: _gasket,
                     textInputType: TextInputType.number,
                     textInputAction: TextInputAction.next,
                     label: 'Gasket (mm)',
@@ -152,7 +152,7 @@ class _CompressionRatioState extends State<CompressionRatio> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: PrimaryInputField(
-                    textEditor: piston,
+                    textEditor: _piston,
                     textInputType: TextInputType.number,
                     textInputAction: TextInputAction.next,
                     label: 'Piston (cm3)',
@@ -165,7 +165,7 @@ class _CompressionRatioState extends State<CompressionRatio> {
               children: [
                 Expanded(
                   child: PrimaryInputField(
-                    textEditor: bore,
+                    textEditor: _bore,
                     textInputType: TextInputType.number,
                     textInputAction: TextInputAction.next,
                     label: 'Bore (mm)',
@@ -174,7 +174,7 @@ class _CompressionRatioState extends State<CompressionRatio> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: PrimaryInputField(
-                    textEditor: stroke,
+                    textEditor: _stroke,
                     textInputType: TextInputType.number,
                     textInputAction: TextInputAction.done,
                     label: 'Stroke (mm)',
@@ -185,7 +185,7 @@ class _CompressionRatioState extends State<CompressionRatio> {
             const SizedBox(height: 50),
             Center(
               child: Text(
-                result,
+                _result,
                 style: const TextStyle(
                   fontSize: 18,
                   color: Colors.black,

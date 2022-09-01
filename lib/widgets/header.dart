@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 class Header extends StatelessWidget with PreferredSizeWidget {
-  final String title;
+  final String _title;
 
-  const Header({required this.title});
+  const Header({
+    required String title,
+  }) : _title = title;
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +14,7 @@ class Header extends StatelessWidget with PreferredSizeWidget {
       centerTitle: true,
       backgroundColor: Colors.deepPurple,
       title: Text(
-        title,
+        _title,
         style: const TextStyle(
           fontSize: 18,
           color: Colors.white,
