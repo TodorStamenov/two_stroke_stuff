@@ -1,9 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:two_stroke_stuff/bloc/compression/compression_bloc.dart';
+import 'package:two_stroke_stuff/bloc/port/port_bloc.dart';
 import 'package:two_stroke_stuff/models/compression_ratio_model.dart';
 import 'package:two_stroke_stuff/models/port_timing_model.dart';
 import 'package:two_stroke_stuff/utils/storage.dart';
+import 'package:two_stroke_stuff/utils/toaster.dart';
 import 'package:two_stroke_stuff/widgets/header.dart';
 import 'package:two_stroke_stuff/widgets/primary_action_button.dart';
 
@@ -18,6 +22,12 @@ class _CalculationHistoryState extends State<CalculationHistory> {
   PortTimingModel _portTiming = PortTimingModel();
   CompressionRatioModel _compressionRatio = CompressionRatioModel();
 
+  @override
+  void initState() {
+    super.initState();
+    initModels();
+  }
+
   void initModels() {
     if (Storage.prefs?.getString('port') == null) {
       Storage.prefs?.setString('port', jsonEncode(PortTimingModel()));
@@ -27,14 +37,54 @@ class _CalculationHistoryState extends State<CalculationHistory> {
       Storage.prefs?.setString('compression', jsonEncode(CompressionRatioModel()));
     }
 
-    _portTiming = PortTimingModel.fromJson(jsonDecode((Storage.prefs?.getString('port'))!));
-    _compressionRatio = CompressionRatioModel.fromJson(jsonDecode((Storage.prefs?.getString('compression'))!));
+    setState(() {
+      _portTiming = PortTimingModel.fromJson(jsonDecode((Storage.prefs?.getString('port'))!));
+      _compressionRatio = CompressionRatioModel.fromJson(jsonDecode((Storage.prefs?.getString('compression'))!));
+    });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    initModels();
+  void loadPortTiming() {
+    if (_portTiming.portDuration == 0 || _portTiming.portDuration == 0) {
+      showToastMessage('You must have calculation saved!');
+      return;
+    }
+
+    context.read<PortBloc>().add(LoadPort(_portTiming));
+    showToastMessage('Port Timing Loaded!');
+  }
+
+  void clearPortTiming() {
+    context.read<PortBloc>().add(ClearPort());
+    Storage.prefs?.setString(
+      'port',
+      jsonEncode(PortTimingModel()),
+    );
+
+    setState(() {
+      _portTiming = PortTimingModel();
+    });
+  }
+
+  void loadCompressionRatio() {
+    if (_compressionRatio.volume == 0 || _compressionRatio.compressionRatio == 0) {
+      showToastMessage('You must have calculation saved!');
+      return;
+    }
+
+    context.read<CompressionBloc>().add(LoadCompression(_compressionRatio));
+    showToastMessage('Compression Ratio Loaded!');
+  }
+
+  void clearCompressionRatio() {
+    context.read<CompressionBloc>().add(ClearCompression());
+    Storage.prefs?.setString(
+      'compression',
+      jsonEncode(CompressionRatioModel()),
+    );
+
+    setState(() {
+      _compressionRatio = CompressionRatioModel();
+    });
   }
 
   @override
@@ -105,20 +155,12 @@ class _CalculationHistoryState extends State<CalculationHistory> {
               children: [
                 PrimaryActionButton(
                   text: 'Clear',
-                  action: () {
-                    Storage.prefs?.setString(
-                      'port',
-                      jsonEncode(PortTimingModel()),
-                    );
-                    setState(() {
-                      _portTiming = PortTimingModel();
-                    });
-                  },
+                  action: clearPortTiming,
                 ),
                 const SizedBox(width: 10),
                 PrimaryActionButton(
                   text: 'Load',
-                  action: () {},
+                  action: loadPortTiming,
                 ),
               ],
             ),
@@ -196,20 +238,12 @@ class _CalculationHistoryState extends State<CalculationHistory> {
               children: [
                 PrimaryActionButton(
                   text: 'Clear',
-                  action: () {
-                    Storage.prefs?.setString(
-                      'compression',
-                      jsonEncode(CompressionRatioModel()),
-                    );
-                    setState(() {
-                      _compressionRatio = CompressionRatioModel();
-                    });
-                  },
+                  action: clearCompressionRatio,
                 ),
                 const SizedBox(width: 10),
                 PrimaryActionButton(
                   text: 'Load',
-                  action: () {},
+                  action: loadCompressionRatio,
                 ),
               ],
             ),

@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:two_stroke_stuff/bloc/port/port_bloc.dart';
 import 'package:two_stroke_stuff/models/port_timing_model.dart';
 import 'package:two_stroke_stuff/utils/storage.dart';
 import 'package:two_stroke_stuff/utils/toaster.dart';
@@ -27,6 +29,22 @@ class _PortTimingState extends State<PortTiming> {
   final TextEditingController _stroke = TextEditingController();
   final TextEditingController _portDuration = TextEditingController();
   final TextEditingController _portHeight = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    final state = BlocProvider.of<PortBloc>(context).state;
+    if (state is PortLoaded) {
+      final port = state.portTiming;
+
+      _deckHeight.text = port.deck.toString();
+      _rodLength.text = port.rod.toString();
+      _stroke.text = port.stroke.toString();
+      _portDuration.text = port.portDuration.toString();
+      _portHeight.text = port.portHeight.toString();
+    }
+
+    super.didChangeDependencies();
+  }
 
   void clearCalculation() {
     setState(() {
@@ -148,9 +166,12 @@ class _PortTimingState extends State<PortTiming> {
                   value: _isPortDuration,
                   activeColor: Colors.deepPurple,
                   onChanged: (bool value) {
+                    _portDuration.clear();
+                    _portHeight.clear();
+
                     setState(() {
+                      _result = '';
                       _isPortDuration = value;
-                      clearCalculation();
                     });
                   },
                 ),

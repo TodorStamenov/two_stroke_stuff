@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:two_stroke_stuff/bloc/compression/compression_bloc.dart';
 import 'package:two_stroke_stuff/models/compression_ratio_model.dart';
 import 'package:two_stroke_stuff/utils/storage.dart';
 import 'package:two_stroke_stuff/utils/toaster.dart';
@@ -27,6 +29,23 @@ class _CompressionRatioState extends State<CompressionRatio> {
   final TextEditingController _piston = TextEditingController();
   final TextEditingController _bore = TextEditingController();
   final TextEditingController _stroke = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    final state = BlocProvider.of<CompressionBloc>(context).state;
+    if (state is CompressionLoaded) {
+      final compression = state.compressionRatio;
+
+      _head.text = compression.head.toString();
+      _deck.text = compression.deck.toString();
+      _gasket.text = compression.gasket.toString();
+      _piston.text = compression.piston.toString();
+      _bore.text = compression.bore.toString();
+      _stroke.text = compression.stroke.toString();
+    }
+
+    super.didChangeDependencies();
+  }
 
   void clearCalculation() {
     setState(() {
