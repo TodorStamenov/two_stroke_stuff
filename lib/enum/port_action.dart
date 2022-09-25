@@ -1,0 +1,4 @@
+enum PortAction {
+  increase,
+  decrease,
+}

@@ -4,9 +4,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:two_stroke_stuff/bloc/port/port_bloc.dart';
+import 'package:two_stroke_stuff/enum/port_action.dart';
 import 'package:two_stroke_stuff/models/port_timing_model.dart';
 import 'package:two_stroke_stuff/utils/storage.dart';
 import 'package:two_stroke_stuff/utils/toaster.dart';
+import 'package:two_stroke_stuff/widgets/icon_action_button.dart';
 import 'package:two_stroke_stuff/widgets/header.dart';
 import 'package:two_stroke_stuff/widgets/input_field.dart';
 import 'package:two_stroke_stuff/widgets/primary_action_button.dart';
@@ -100,15 +102,21 @@ class _PortTimingState extends State<PortTiming> {
 
     final deck = double.parse(_deckHeight.text);
     final rod = double.parse(_rodLength.text);
+    final stroke = double.parse(_stroke.text);
     final radius = double.parse(_stroke.text) / 2;
-    final targetPortHeight = double.parse(_portHeight.text);
+    final currentPortHeight = double.parse(_portHeight.text);
 
-    if (rod < 0 || deck < 0 || radius < 0 || targetPortHeight < 0) {
+    if (rod < 0 || deck < 0 || radius < 0 || currentPortHeight < 0) {
       showToastMessage('Rod Deck Stroke and Port Height must have positive value!');
       return;
     }
 
-    final x = deck + rod + radius - targetPortHeight;
+    if (stroke <= currentPortHeight) {
+      showToastMessage('Stroke value must be greater than Port height!');
+      return;
+    }
+
+    final x = deck + rod + radius - currentPortHeight;
     final angle = (pow(radius, 2) + pow(x, 2) - pow(rod, 2)) / (2 * radius * x);
 
     _portDurationResult = (180 - (acos(angle) * 180 / pi)) * 2;
@@ -116,6 +124,47 @@ class _PortTimingState extends State<PortTiming> {
     setState(() {
       _result = 'Port Duration: ${_portDurationResult?.toStringAsFixed(2)} deg';
     });
+  }
+
+  void changePortParameter(PortAction portAction) {
+    if (_result == '') {
+      showToastMessage('First you have to execute calculation!');
+      return;
+    }
+
+    var portChange = 1;
+    if (portAction == PortAction.decrease) {
+      portChange = -1;
+    }
+
+    if (_isPortDuration) {
+      final portHeight = double.parse(_portHeight.text) + portChange;
+      final stroke = double.parse(_stroke.text);
+
+      if ((portHeight <= 0 && portAction == PortAction.decrease) ||
+          (stroke <= portHeight && portAction == PortAction.increase)) {
+        return;
+      }
+
+      setState(() {
+        _portHeight.text = portHeight.toString();
+      });
+
+      calculatePortDuration();
+    } else {
+      final portDuration = double.parse(_portDuration.text) + portChange;
+
+      if ((portDuration <= 0 && portAction == PortAction.decrease) ||
+          (360 <= portDuration && portAction == PortAction.increase)) {
+        return;
+      }
+
+      setState(() {
+        _portDuration.text = portDuration.toString();
+      });
+
+      calculateDeckHeight();
+    }
   }
 
   void saveCalculation() {
@@ -213,18 +262,48 @@ class _PortTimingState extends State<PortTiming> {
             ),
             const SizedBox(height: 50),
             if (_isPortDuration) ...[
-              PrimaryInputField(
-                textEditor: _portHeight,
-                textInputType: TextInputType.number,
-                textInputAction: TextInputAction.done,
-                label: 'Current Port Height (mm)',
+              Row(
+                children: [
+                  Expanded(
+                    child: PrimaryInputField(
+                      textEditor: _portHeight,
+                      textInputType: TextInputType.number,
+                      textInputAction: TextInputAction.done,
+                      label: 'Current Height (mm)',
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  IconActionButton(
+                    icon: Icons.remove,
+                    action: () => changePortParameter(PortAction.decrease),
+                  ),
+                  IconActionButton(
+                    icon: Icons.add,
+                    action: () => changePortParameter(PortAction.increase),
+                  ),
+                ],
               ),
             ] else ...[
-              PrimaryInputField(
-                textEditor: _portDuration,
-                textInputType: TextInputType.number,
-                textInputAction: TextInputAction.done,
-                label: 'Target Port Duration (deg)',
+              Row(
+                children: [
+                  Expanded(
+                    child: PrimaryInputField(
+                      textEditor: _portDuration,
+                      textInputType: TextInputType.number,
+                      textInputAction: TextInputAction.done,
+                      label: 'Target Duration (deg)',
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  IconActionButton(
+                    icon: Icons.remove,
+                    action: () => changePortParameter(PortAction.decrease),
+                  ),
+                  IconActionButton(
+                    icon: Icons.add,
+                    action: () => changePortParameter(PortAction.increase),
+                  ),
+                ],
               ),
             ],
             const SizedBox(height: 50),
