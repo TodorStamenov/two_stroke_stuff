@@ -111,7 +111,7 @@ class _PortTimingState extends State<PortTiming> {
       return;
     }
 
-    if (stroke <= currentPortHeight) {
+    if (stroke + deck < currentPortHeight) {
       showToastMessage('Stroke value must be greater than Port height!');
       return;
     }
@@ -139,10 +139,11 @@ class _PortTimingState extends State<PortTiming> {
 
     if (_isPortDuration) {
       final portHeight = double.parse(_portHeight.text) + portChange;
+      final deck = double.parse(_deckHeight.text);
       final stroke = double.parse(_stroke.text);
 
-      if ((portHeight <= 0 && portAction == PortAction.decrease) ||
-          (stroke <= portHeight && portAction == PortAction.increase)) {
+      if ((portHeight < deck && portAction == PortAction.decrease) ||
+          (stroke < portHeight - deck && portAction == PortAction.increase)) {
         return;
       }
 
