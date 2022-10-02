@@ -4,10 +4,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:two_stroke_stuff/bloc/compression/compression_bloc.dart';
+import 'package:two_stroke_stuff/enum/intake_duration_action.dart';
 import 'package:two_stroke_stuff/models/compression_ratio_model.dart';
 import 'package:two_stroke_stuff/utils/storage.dart';
 import 'package:two_stroke_stuff/utils/toaster.dart';
 import 'package:two_stroke_stuff/widgets/header.dart';
+import 'package:two_stroke_stuff/widgets/icon_action_button.dart';
 import 'package:two_stroke_stuff/widgets/input_field.dart';
 import 'package:two_stroke_stuff/widgets/primary_action_button.dart';
 
@@ -23,12 +25,14 @@ class _CompressionRatioState extends State<CompressionRatio> {
   double? _compressionRatio;
   String _result = '';
 
-  final TextEditingController _head = TextEditingController();
-  final TextEditingController _deck = TextEditingController();
-  final TextEditingController _gasket = TextEditingController();
-  final TextEditingController _piston = TextEditingController();
-  final TextEditingController _bore = TextEditingController();
-  final TextEditingController _stroke = TextEditingController();
+  final _head = TextEditingController();
+  final _deck = TextEditingController();
+  final _gasket = TextEditingController();
+  final _piston = TextEditingController();
+  final _bore = TextEditingController();
+  final _stroke = TextEditingController();
+  final _rod = TextEditingController();
+  final _intake = TextEditingController();
 
   @override
   void didChangeDependencies() {
@@ -48,14 +52,16 @@ class _CompressionRatioState extends State<CompressionRatio> {
   }
 
   void clearCalculation() {
-    setState(() {
-      _head.clear();
-      _deck.clear();
-      _gasket.clear();
-      _piston.clear();
-      _bore.clear();
-      _stroke.clear();
+    _head.clear();
+    _deck.clear();
+    _gasket.clear();
+    _piston.clear();
+    _bore.clear();
+    _stroke.clear();
+    _rod.clear();
+    _intake.clear();
 
+    setState(() {
       _result = '';
       FocusManager.instance.primaryFocus?.unfocus();
     });
@@ -90,11 +96,60 @@ class _CompressionRatioState extends State<CompressionRatio> {
     _compressionRatio = double.parse(compressionRatio.toStringAsFixed(2));
 
     var text = 'Displacement: ${_volume?.toStringAsFixed(2)} cm3\n\n';
-    text += 'Static Compression Ratio: ${_compressionRatio?.toStringAsFixed(2)}:1';
+    text += 'Static Compression Ratio: ${_compressionRatio?.toStringAsFixed(2)}:1\n\n';
+
+    var dynamicCompressionRatio = 'N\\A';
+    if (_rod.text != '' && _intake.text != '') {
+      final rodLength = double.parse(_rod.text);
+      final intakeDuration = double.parse(_intake.text);
+      if (rodLength <= 0 || intakeDuration < 0 || 180 < intakeDuration) {
+        return;
+      }
+
+      final radius = strokeLength / 2;
+
+      final y = cos(intakeDuration * pi / 180) * radius;
+      final z = sin(intakeDuration * pi / 180) * radius;
+      final x = sqrt(pow(rodLength, 2) - pow(z, 2)) - y;
+
+      final dynamicStroke = rodLength + radius - x;
+      final dynamicCylinderVolume = boreArea * dynamicStroke;
+      dynamicCompressionRatio = '${((chamberVolume + dynamicCylinderVolume) / chamberVolume).toStringAsFixed(2)}:1';
+    }
+
+    text += 'Dynamic Compression Ratio: $dynamicCompressionRatio';
 
     setState(() {
       _result = text;
     });
+  }
+
+  void changeIntakeDuration(IntakeDurationAction intakeDurationAction) {
+    if (_result == '') {
+      showToastMessage('First you have to execute calculation!');
+      return;
+    }
+
+    if (_rod.text == '' || _intake.text == '') {
+      return;
+    }
+
+    var durationChange = 1;
+    if (intakeDurationAction == IntakeDurationAction.decrease) {
+      durationChange = -1;
+    }
+
+    final intakeDuration = double.parse(_intake.text) + durationChange;
+    if ((intakeDuration < 0 && intakeDurationAction == IntakeDurationAction.decrease) ||
+        (180 < intakeDuration && intakeDurationAction == IntakeDurationAction.increase)) {
+      return;
+    }
+
+    setState(() {
+      _intake.text = intakeDuration.toString();
+    });
+
+    calculate();
   }
 
   void saveCalculation() {
@@ -135,7 +190,6 @@ class _CompressionRatioState extends State<CompressionRatio> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 10),
             Row(
               children: [
                 Expanded(
@@ -202,6 +256,42 @@ class _CompressionRatioState extends State<CompressionRatio> {
               ],
             ),
             const SizedBox(height: 50),
+            Row(
+              children: [
+                Expanded(
+                  child: PrimaryInputField(
+                    textEditor: _rod,
+                    textInputType: TextInputType.number,
+                    textInputAction: TextInputAction.done,
+                    label: 'Rod (mm)',
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: PrimaryInputField(
+                    textEditor: _intake,
+                    textInputType: TextInputType.number,
+                    textInputAction: TextInputAction.done,
+                    label: 'Intake ABDC (deg)',
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconActionButton(
+                  icon: Icons.remove,
+                  action: () => changeIntakeDuration(IntakeDurationAction.decrease),
+                ),
+                IconActionButton(
+                  icon: Icons.add,
+                  action: () => changeIntakeDuration(IntakeDurationAction.increase),
+                ),
+              ],
+            ),
+            const SizedBox(height: 50),
             Center(
               child: Text(
                 _result,
@@ -234,7 +324,6 @@ class _CompressionRatioState extends State<CompressionRatio> {
                 action: calculate,
               ),
             ),
-            const SizedBox(height: 10),
           ],
         ),
       ),

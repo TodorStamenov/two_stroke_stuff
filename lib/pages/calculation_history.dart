@@ -99,7 +99,6 @@ class _CalculationHistoryState extends State<CalculationHistory> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 10),
             const Text(
               'Port timing',
               textAlign: TextAlign.center,
@@ -109,7 +108,7 @@ class _CalculationHistoryState extends State<CalculationHistory> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 15),
             Text(
               'Deck: ${_portTiming.deck} mm',
               style: const TextStyle(
@@ -164,7 +163,7 @@ class _CalculationHistoryState extends State<CalculationHistory> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
             const Text(
               'Compression Ratio',
               textAlign: TextAlign.center,
@@ -174,7 +173,7 @@ class _CalculationHistoryState extends State<CalculationHistory> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 15),
             Text(
               'Head: ${_compressionRatio.head} cm3',
               style: const TextStyle(

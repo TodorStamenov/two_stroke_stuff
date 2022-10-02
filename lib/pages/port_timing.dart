@@ -26,11 +26,11 @@ class _PortTimingState extends State<PortTiming> {
   double? _portDurationResult;
   bool _isPortDuration = false;
 
-  final TextEditingController _deckHeight = TextEditingController();
-  final TextEditingController _rodLength = TextEditingController();
-  final TextEditingController _stroke = TextEditingController();
-  final TextEditingController _portDuration = TextEditingController();
-  final TextEditingController _portHeight = TextEditingController();
+  final _deckHeight = TextEditingController();
+  final _rodLength = TextEditingController();
+  final _stroke = TextEditingController();
+  final _portDuration = TextEditingController();
+  final _portHeight = TextEditingController();
 
   @override
   void didChangeDependencies() {
@@ -195,7 +195,7 @@ class _PortTimingState extends State<PortTiming> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const Header(
-        title: 'Port Height or Duration',
+        title: 'Port Calculator',
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(40),
@@ -203,13 +203,12 @@ class _PortTimingState extends State<PortTiming> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
                   'Port Height',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 17),
                 ),
                 const SizedBox(width: 10),
                 Switch(
@@ -228,7 +227,7 @@ class _PortTimingState extends State<PortTiming> {
                 const SizedBox(width: 10),
                 const Text(
                   'Port Duration',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 17),
                 ),
               ],
             ),
@@ -346,7 +345,6 @@ class _PortTimingState extends State<PortTiming> {
                 },
               ),
             ),
-            const SizedBox(height: 10),
           ],
         ),
       ),

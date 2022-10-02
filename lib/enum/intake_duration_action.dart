@@ -1,0 +1,4 @@
+enum IntakeDurationAction {
+  increase,
+  decrease,
+}
