@@ -102,7 +102,13 @@ class _CompressionRatioState extends State<CompressionRatio> {
     if (_rod.text != '' && _intake.text != '') {
       final rodLength = double.parse(_rod.text);
       final intakeDuration = double.parse(_intake.text);
-      if (rodLength <= 0 || intakeDuration < 0 || 180 < intakeDuration) {
+      if (rodLength <= 0) {
+        showToastMessage('Rod length must have positive value!');
+        return;
+      }
+
+      if (intakeDuration < 0 || 180 < intakeDuration) {
+        showToastMessage('Intake duration must be between 0 and 180 degrees!');
         return;
       }
 
@@ -139,14 +145,20 @@ class _CompressionRatioState extends State<CompressionRatio> {
       durationChange = -1;
     }
 
-    final intakeDuration = double.parse(_intake.text) + durationChange;
+    var intakeDuration = double.parse(_intake.text) + durationChange;
     if ((intakeDuration < 0 && intakeDurationAction == IntakeDurationAction.decrease) ||
         (180 < intakeDuration && intakeDurationAction == IntakeDurationAction.increase)) {
       return;
     }
 
+    if (intakeDuration < 0 && intakeDurationAction == IntakeDurationAction.increase) {
+      intakeDuration = 0;
+    } else if (180 < intakeDuration && intakeDurationAction == IntakeDurationAction.decrease) {
+      intakeDuration = 180;
+    }
+
     setState(() {
-      _intake.text = intakeDuration.toString();
+      _intake.text = intakeDuration.toStringAsFixed(1);
     });
 
     calculate();

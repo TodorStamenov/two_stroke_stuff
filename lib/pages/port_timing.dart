@@ -138,7 +138,7 @@ class _PortTimingState extends State<PortTiming> {
     }
 
     if (_isPortDuration) {
-      final portHeight = double.parse(_portHeight.text) + portChange;
+      var portHeight = double.parse(_portHeight.text) + portChange;
       final deck = double.parse(_deckHeight.text);
       final stroke = double.parse(_stroke.text);
 
@@ -147,21 +147,33 @@ class _PortTimingState extends State<PortTiming> {
         return;
       }
 
+      if (portHeight < deck && portAction == PortAction.increase) {
+        portHeight = deck;
+      } else if (stroke < portHeight - deck && portAction == PortAction.decrease) {
+        portHeight = stroke + deck;
+      }
+
       setState(() {
-        _portHeight.text = portHeight.toString();
+        _portHeight.text = portHeight.toStringAsFixed(1);
       });
 
       calculatePortDuration();
     } else {
-      final portDuration = double.parse(_portDuration.text) + portChange;
+      var portDuration = double.parse(_portDuration.text) + portChange;
 
       if ((portDuration <= 0 && portAction == PortAction.decrease) ||
           (360 <= portDuration && portAction == PortAction.increase)) {
         return;
       }
 
+      if (portDuration <= 0 && portAction == PortAction.increase) {
+        portDuration = 1;
+      } else if (360 <= portDuration && portAction == PortAction.decrease) {
+        portDuration = 359;
+      }
+
       setState(() {
-        _portDuration.text = portDuration.toString();
+        _portDuration.text = portDuration.toStringAsFixed(1);
       });
 
       calculateDeckHeight();
