@@ -10,7 +10,7 @@ import 'package:two_stroke_stuff/utils/storage.dart';
 import 'package:two_stroke_stuff/utils/toaster.dart';
 import 'package:two_stroke_stuff/widgets/icon_action_button.dart';
 import 'package:two_stroke_stuff/widgets/header.dart';
-import 'package:two_stroke_stuff/widgets/input_field.dart';
+import 'package:two_stroke_stuff/widgets/primary_input_field.dart';
 import 'package:two_stroke_stuff/widgets/primary_action_button.dart';
 
 class PortTiming extends StatefulWidget {
@@ -26,6 +26,7 @@ class _PortTimingState extends State<PortTiming> {
   double? _portDurationResult;
   bool _isPortDuration = false;
 
+  final _formKey = GlobalKey<FormState>();
   final _deckHeight = TextEditingController();
   final _rodLength = TextEditingController();
   final _stroke = TextEditingController();
@@ -62,8 +63,7 @@ class _PortTimingState extends State<PortTiming> {
   }
 
   void calculateDeckHeight() {
-    if (_deckHeight.text == '' || _rodLength.text == '' || _stroke.text == '' || _portDuration.text == '') {
-      showToastMessage('All inputs are required!');
+    if (!_formKey.currentState!.validate()) {
       return;
     }
 
@@ -95,8 +95,7 @@ class _PortTimingState extends State<PortTiming> {
   }
 
   void calculatePortDuration() {
-    if (_deckHeight.text == '' || _rodLength.text == '' || _stroke.text == '' || _portHeight.text == '') {
-      showToastMessage('All inputs are required!');
+    if (!_formKey.currentState!.validate()) {
       return;
     }
 
@@ -211,153 +210,161 @@ class _PortTimingState extends State<PortTiming> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(40),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Port Height',
-                  style: TextStyle(fontSize: 17),
-                ),
-                const SizedBox(width: 10),
-                Switch(
-                  value: _isPortDuration,
-                  activeColor: Colors.deepPurple,
-                  onChanged: (bool value) {
-                    _portDuration.clear();
-                    _portHeight.clear();
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Port Height',
+                    style: TextStyle(fontSize: 17),
+                  ),
+                  const SizedBox(width: 10),
+                  Switch(
+                    value: _isPortDuration,
+                    activeColor: Colors.deepPurple,
+                    onChanged: (bool value) {
+                      _portDuration.clear();
+                      _portHeight.clear();
 
-                    setState(() {
-                      _result = '';
-                      _isPortDuration = value;
-                    });
+                      setState(() {
+                        _result = '';
+                        _isPortDuration = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                  const Text(
+                    'Port Duration',
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 30),
+              Row(
+                children: [
+                  Expanded(
+                    child: PrimaryInputField(
+                      textEditor: _deckHeight,
+                      textInputType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      label: 'Deck Height (mm)',
+                      isRequired: true,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: PrimaryInputField(
+                      textEditor: _rodLength,
+                      textInputType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      label: 'Rod Length (mm)',
+                      isRequired: true,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 50),
+              PrimaryInputField(
+                textEditor: _stroke,
+                textInputType: TextInputType.number,
+                textInputAction: TextInputAction.next,
+                label: 'Stroke (mm)',
+                isRequired: true,
+              ),
+              const SizedBox(height: 50),
+              if (_isPortDuration) ...[
+                Row(
+                  children: [
+                    Expanded(
+                      child: PrimaryInputField(
+                        textEditor: _portHeight,
+                        textInputType: TextInputType.number,
+                        textInputAction: TextInputAction.done,
+                        label: 'Current Height (mm)',
+                        isRequired: true,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    IconActionButton(
+                      icon: Icons.remove,
+                      action: () => changePortParameter(PortAction.decrease),
+                    ),
+                    IconActionButton(
+                      icon: Icons.add,
+                      action: () => changePortParameter(PortAction.increase),
+                    ),
+                  ],
+                ),
+              ] else ...[
+                Row(
+                  children: [
+                    Expanded(
+                      child: PrimaryInputField(
+                        textEditor: _portDuration,
+                        textInputType: TextInputType.number,
+                        textInputAction: TextInputAction.done,
+                        label: 'Target Duration (deg)',
+                        isRequired: true,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    IconActionButton(
+                      icon: Icons.remove,
+                      action: () => changePortParameter(PortAction.decrease),
+                    ),
+                    IconActionButton(
+                      icon: Icons.add,
+                      action: () => changePortParameter(PortAction.increase),
+                    ),
+                  ],
+                ),
+              ],
+              const SizedBox(height: 50),
+              Center(
+                child: Text(
+                  _result,
+                  style: const TextStyle(
+                    fontSize: 21,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 50),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  PrimaryActionButton(
+                    text: 'Clear',
+                    action: clearCalculation,
+                  ),
+                  const SizedBox(width: 10),
+                  PrimaryActionButton(
+                    text: 'Save',
+                    action: saveCalculation,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Center(
+                child: PrimaryActionButton(
+                  text: 'Calculate',
+                  action: () {
+                    if (_isPortDuration) {
+                      calculatePortDuration();
+                    } else {
+                      calculateDeckHeight();
+                    }
                   },
                 ),
-                const SizedBox(width: 10),
-                const Text(
-                  'Port Duration',
-                  style: TextStyle(fontSize: 17),
-                ),
-              ],
-            ),
-            const SizedBox(height: 30),
-            Row(
-              children: [
-                Expanded(
-                  child: PrimaryInputField(
-                    textEditor: _deckHeight,
-                    textInputType: TextInputType.number,
-                    textInputAction: TextInputAction.next,
-                    label: 'Deck Height (mm)',
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: PrimaryInputField(
-                    textEditor: _rodLength,
-                    textInputType: TextInputType.number,
-                    textInputAction: TextInputAction.next,
-                    label: 'Rod Length (mm)',
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 50),
-            PrimaryInputField(
-              textEditor: _stroke,
-              textInputType: TextInputType.number,
-              textInputAction: TextInputAction.next,
-              label: 'Stroke (mm)',
-            ),
-            const SizedBox(height: 50),
-            if (_isPortDuration) ...[
-              Row(
-                children: [
-                  Expanded(
-                    child: PrimaryInputField(
-                      textEditor: _portHeight,
-                      textInputType: TextInputType.number,
-                      textInputAction: TextInputAction.done,
-                      label: 'Current Height (mm)',
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  IconActionButton(
-                    icon: Icons.remove,
-                    action: () => changePortParameter(PortAction.decrease),
-                  ),
-                  IconActionButton(
-                    icon: Icons.add,
-                    action: () => changePortParameter(PortAction.increase),
-                  ),
-                ],
-              ),
-            ] else ...[
-              Row(
-                children: [
-                  Expanded(
-                    child: PrimaryInputField(
-                      textEditor: _portDuration,
-                      textInputType: TextInputType.number,
-                      textInputAction: TextInputAction.done,
-                      label: 'Target Duration (deg)',
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  IconActionButton(
-                    icon: Icons.remove,
-                    action: () => changePortParameter(PortAction.decrease),
-                  ),
-                  IconActionButton(
-                    icon: Icons.add,
-                    action: () => changePortParameter(PortAction.increase),
-                  ),
-                ],
               ),
             ],
-            const SizedBox(height: 50),
-            Center(
-              child: Text(
-                _result,
-                style: const TextStyle(
-                  fontSize: 21,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const SizedBox(height: 50),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                PrimaryActionButton(
-                  text: 'Clear',
-                  action: clearCalculation,
-                ),
-                const SizedBox(width: 10),
-                PrimaryActionButton(
-                  text: 'Save',
-                  action: saveCalculation,
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Center(
-              child: PrimaryActionButton(
-                text: 'Calculate',
-                action: () {
-                  if (_isPortDuration) {
-                    calculatePortDuration();
-                  } else {
-                    calculateDeckHeight();
-                  }
-                },
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

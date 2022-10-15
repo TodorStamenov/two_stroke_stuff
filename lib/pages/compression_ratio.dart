@@ -10,7 +10,7 @@ import 'package:two_stroke_stuff/utils/storage.dart';
 import 'package:two_stroke_stuff/utils/toaster.dart';
 import 'package:two_stroke_stuff/widgets/header.dart';
 import 'package:two_stroke_stuff/widgets/icon_action_button.dart';
-import 'package:two_stroke_stuff/widgets/input_field.dart';
+import 'package:two_stroke_stuff/widgets/primary_input_field.dart';
 import 'package:two_stroke_stuff/widgets/primary_action_button.dart';
 
 class CompressionRatio extends StatefulWidget {
@@ -25,6 +25,7 @@ class _CompressionRatioState extends State<CompressionRatio> {
   double? _compressionRatio;
   String _result = '';
 
+  final _formKey = GlobalKey<FormState>();
   final _head = TextEditingController();
   final _deck = TextEditingController();
   final _gasket = TextEditingController();
@@ -68,13 +69,7 @@ class _CompressionRatioState extends State<CompressionRatio> {
   }
 
   void calculate() {
-    if (_head.text == '' ||
-        _deck.text == '' ||
-        _gasket.text == '' ||
-        _piston.text == '' ||
-        _bore.text == '' ||
-        _stroke.text == '') {
-      showToastMessage('All inputs are required!');
+    if (!_formKey.currentState!.validate()) {
       return;
     }
 
@@ -198,145 +193,154 @@ class _CompressionRatioState extends State<CompressionRatio> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(40),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: PrimaryInputField(
-                    textEditor: _head,
-                    textInputType: TextInputType.number,
-                    textInputAction: TextInputAction.next,
-                    label: 'Head (cm3)',
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: PrimaryInputField(
+                      textEditor: _head,
+                      textInputType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      label: 'Head (cm3)',
+                      isRequired: true,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: PrimaryInputField(
-                    textEditor: _deck,
-                    textInputType: TextInputType.number,
-                    textInputAction: TextInputAction.next,
-                    label: 'Deck (mm)',
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: PrimaryInputField(
+                      textEditor: _deck,
+                      textInputType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      label: 'Deck (mm)',
+                      isRequired: true,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 50),
-            Row(
-              children: [
-                Expanded(
-                  child: PrimaryInputField(
-                    textEditor: _gasket,
-                    textInputType: TextInputType.number,
-                    textInputAction: TextInputAction.next,
-                    label: 'Gasket (mm)',
+                ],
+              ),
+              const SizedBox(height: 50),
+              Row(
+                children: [
+                  Expanded(
+                    child: PrimaryInputField(
+                      textEditor: _gasket,
+                      textInputType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      label: 'Gasket (mm)',
+                      isRequired: true,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: PrimaryInputField(
-                    textEditor: _piston,
-                    textInputType: TextInputType.number,
-                    textInputAction: TextInputAction.next,
-                    label: 'Piston (cm3)',
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: PrimaryInputField(
+                      textEditor: _piston,
+                      textInputType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      label: 'Piston (cm3)',
+                      isRequired: true,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 50),
-            Row(
-              children: [
-                Expanded(
-                  child: PrimaryInputField(
-                    textEditor: _bore,
-                    textInputType: TextInputType.number,
-                    textInputAction: TextInputAction.next,
-                    label: 'Bore (mm)',
+                ],
+              ),
+              const SizedBox(height: 50),
+              Row(
+                children: [
+                  Expanded(
+                    child: PrimaryInputField(
+                      textEditor: _bore,
+                      textInputType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      label: 'Bore (mm)',
+                      isRequired: true,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: PrimaryInputField(
-                    textEditor: _stroke,
-                    textInputType: TextInputType.number,
-                    textInputAction: TextInputAction.done,
-                    label: 'Stroke (mm)',
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: PrimaryInputField(
+                      textEditor: _stroke,
+                      textInputType: TextInputType.number,
+                      textInputAction: TextInputAction.done,
+                      label: 'Stroke (mm)',
+                      isRequired: true,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 50),
-            Row(
-              children: [
-                Expanded(
-                  child: PrimaryInputField(
-                    textEditor: _rod,
-                    textInputType: TextInputType.number,
-                    textInputAction: TextInputAction.done,
-                    label: 'Rod (mm)',
+                ],
+              ),
+              const SizedBox(height: 50),
+              Row(
+                children: [
+                  Expanded(
+                    child: PrimaryInputField(
+                      textEditor: _rod,
+                      textInputType: TextInputType.number,
+                      textInputAction: TextInputAction.done,
+                      label: 'Rod (mm)',
+                    ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: PrimaryInputField(
-                    textEditor: _intake,
-                    textInputType: TextInputType.number,
-                    textInputAction: TextInputAction.done,
-                    label: 'Intake ABDC (deg)',
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: PrimaryInputField(
+                      textEditor: _intake,
+                      textInputType: TextInputType.number,
+                      textInputAction: TextInputAction.done,
+                      label: 'Intake ABDC (deg)',
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconActionButton(
-                  icon: Icons.remove,
-                  action: () => changeIntakeDuration(IntakeDurationAction.decrease),
-                ),
-                IconActionButton(
-                  icon: Icons.add,
-                  action: () => changeIntakeDuration(IntakeDurationAction.increase),
-                ),
-              ],
-            ),
-            const SizedBox(height: 50),
-            Center(
-              child: Text(
-                _result,
-                style: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
+                ],
+              ),
+              const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconActionButton(
+                    icon: Icons.remove,
+                    action: () => changeIntakeDuration(IntakeDurationAction.decrease),
+                  ),
+                  IconActionButton(
+                    icon: Icons.add,
+                    action: () => changeIntakeDuration(IntakeDurationAction.increase),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 50),
+              Center(
+                child: Text(
+                  _result,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 50),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                PrimaryActionButton(
-                  text: 'Clear',
-                  action: clearCalculation,
-                ),
-                const SizedBox(width: 10),
-                PrimaryActionButton(
-                  text: 'Save',
-                  action: saveCalculation,
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Center(
-              child: PrimaryActionButton(
-                text: 'Calculate',
-                action: calculate,
+              const SizedBox(height: 50),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  PrimaryActionButton(
+                    text: 'Clear',
+                    action: clearCalculation,
+                  ),
+                  const SizedBox(width: 10),
+                  PrimaryActionButton(
+                    text: 'Save',
+                    action: saveCalculation,
+                  ),
+                ],
               ),
-            ),
-          ],
+              const SizedBox(height: 10),
+              Center(
+                child: PrimaryActionButton(
+                  text: 'Calculate',
+                  action: calculate,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
