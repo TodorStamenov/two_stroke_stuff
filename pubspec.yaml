@@ -6,17 +6,17 @@ publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.18.4 <3.0.0"
+  sdk: ">=2.19.2 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  fluttertoast: ^8.0.9
-  shared_preferences: ^2.0.15
+  fluttertoast: ^8.2.1
+  shared_preferences: ^2.0.18
   cupertino_icons: ^1.0.2
-  flutter_bloc: ^8.1.1
-  bloc: ^8.1.0
-  meta: ^1.7.0
+  flutter_bloc: ^8.1.2
+  bloc: ^8.1.1
+  meta: ^1.8.0
 
 dev_dependencies:
   flutter_test:
