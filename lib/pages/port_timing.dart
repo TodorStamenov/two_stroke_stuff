@@ -14,7 +14,7 @@ import 'package:two_stroke_stuff/widgets/primary_input_field.dart';
 import 'package:two_stroke_stuff/widgets/primary_action_button.dart';
 
 class PortTiming extends StatefulWidget {
-  const PortTiming({Key? key}) : super(key: key);
+  const PortTiming({super.key});
 
   @override
   State<PortTiming> createState() => _PortTimingState();

@@ -4,7 +4,7 @@ import 'package:two_stroke_stuff/pages/compression_ratio.dart';
 import 'package:two_stroke_stuff/pages/port_timing.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  const Home({super.key});
 
   @override
   State<Home> createState() => _HomeState();

@@ -14,7 +14,7 @@ import 'package:two_stroke_stuff/widgets/primary_input_field.dart';
 import 'package:two_stroke_stuff/widgets/primary_action_button.dart';
 
 class CompressionRatio extends StatefulWidget {
-  const CompressionRatio({Key? key}) : super(key: key);
+  const CompressionRatio({super.key});
 
   @override
   State<CompressionRatio> createState() => _CompressionRatioState();

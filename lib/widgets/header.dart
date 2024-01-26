@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Header extends StatelessWidget with PreferredSizeWidget {
+class Header extends StatelessWidget implements PreferredSizeWidget {
   final String _title;
 
   const Header({

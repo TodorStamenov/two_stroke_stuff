@@ -12,7 +12,7 @@ import 'package:two_stroke_stuff/widgets/header.dart';
 import 'package:two_stroke_stuff/widgets/primary_action_button.dart';
 
 class CalculationHistory extends StatefulWidget {
-  const CalculationHistory({Key? key}) : super(key: key);
+  const CalculationHistory({super.key});
 
   @override
   State<CalculationHistory> createState() => _CalculationHistoryState();
