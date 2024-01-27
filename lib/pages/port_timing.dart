@@ -69,7 +69,8 @@ class _PortTimingState extends State<PortTiming> {
 
     final targetPortDuration = double.parse(_portDuration.text);
     if (targetPortDuration < 1 || 359 < targetPortDuration) {
-      showToastMessage('Target port duration must be between 1 and 359 degrees!');
+      showToastMessage(
+          'Target port duration must be between 1 and 359 degrees!');
       return;
     }
 
@@ -87,7 +88,8 @@ class _PortTimingState extends State<PortTiming> {
     final z = sin(degreesFromBdc * pi / 180) * radius;
     final x = sqrt(pow(rod, 2) - pow(z, 2)) - y;
 
-    _portHeightResult = double.parse((rod + radius + deck - x).toStringAsFixed(2));
+    _portHeightResult =
+        double.parse((rod + radius + deck - x).toStringAsFixed(2));
 
     setState(() {
       _result = 'Port Height: ${_portHeightResult?.toStringAsFixed(2)} mm';
@@ -106,7 +108,8 @@ class _PortTimingState extends State<PortTiming> {
     final currentPortHeight = double.parse(_portHeight.text);
 
     if (rod < 0 || deck < 0 || radius < 0 || currentPortHeight < 0) {
-      showToastMessage('Rod Deck Stroke and Port Height must have positive value!');
+      showToastMessage(
+          'Rod Deck Stroke and Port Height must have positive value!');
       return;
     }
 
@@ -148,7 +151,8 @@ class _PortTimingState extends State<PortTiming> {
 
       if (portHeight < deck && portAction == PortAction.increase) {
         portHeight = deck;
-      } else if (stroke < portHeight - deck && portAction == PortAction.decrease) {
+      } else if (stroke < portHeight - deck &&
+          portAction == PortAction.decrease) {
         portHeight = stroke + deck;
       }
 
@@ -193,8 +197,12 @@ class _PortTimingState extends State<PortTiming> {
           deck: double.parse(_deckHeight.text),
           rod: double.parse(_rodLength.text),
           stroke: double.parse(_stroke.text),
-          portHeight: !_isPortDuration ? _portHeightResult! : double.parse(_portHeight.text),
-          portDuration: _isPortDuration ? _portDurationResult! : double.parse(_portDuration.text),
+          portHeight: !_isPortDuration
+              ? _portHeightResult!
+              : double.parse(_portHeight.text),
+          portDuration: _isPortDuration
+              ? _portDurationResult!
+              : double.parse(_portDuration.text),
         ),
       ),
     );
@@ -227,6 +235,15 @@ class _PortTimingState extends State<PortTiming> {
                   Switch(
                     value: _isPortDuration,
                     activeColor: Colors.deepPurple,
+                    trackOutlineColor: MaterialStateProperty.resolveWith(
+                      (final Set<MaterialState> states) {
+                        if (states.contains(MaterialState.selected)) {
+                          return null;
+                        }
+
+                        return Colors.grey;
+                      },
+                    ),
                     onChanged: (bool value) {
                       _portDuration.clear();
                       _portHeight.clear();
