@@ -23,6 +23,7 @@ class CompressionLoaded extends CompressionState {
       return true;
     }
 
-    return other is CompressionLoaded && other.compressionRatio == compressionRatio;
+    return other is CompressionLoaded &&
+        other.compressionRatio == compressionRatio;
   }
 }

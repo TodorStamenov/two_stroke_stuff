@@ -91,7 +91,8 @@ class _CompressionRatioState extends State<CompressionRatio> {
     _compressionRatio = double.parse(compressionRatio.toStringAsFixed(2));
 
     var text = 'Displacement: ${_volume?.toStringAsFixed(2)} cm3\n\n';
-    text += 'Static Compression Ratio: ${_compressionRatio?.toStringAsFixed(2)}:1\n\n';
+    text +=
+        'Static Compression Ratio: ${_compressionRatio?.toStringAsFixed(2)}:1\n\n';
 
     var dynamicCompressionRatio = 'N\\A';
     if (_rod.text != '' && _intake.text != '') {
@@ -115,7 +116,8 @@ class _CompressionRatioState extends State<CompressionRatio> {
 
       final dynamicStroke = rodLength + radius - x;
       final dynamicCylinderVolume = boreArea * dynamicStroke;
-      dynamicCompressionRatio = '${((chamberVolume + dynamicCylinderVolume) / chamberVolume).toStringAsFixed(2)}:1';
+      dynamicCompressionRatio =
+          '${((chamberVolume + dynamicCylinderVolume) / chamberVolume).toStringAsFixed(2)}:1';
     }
 
     text += 'Dynamic Compression Ratio: $dynamicCompressionRatio';
@@ -141,14 +143,18 @@ class _CompressionRatioState extends State<CompressionRatio> {
     }
 
     var intakeDuration = double.parse(_intake.text) + durationChange;
-    if ((intakeDuration < 0 && intakeDurationAction == IntakeDurationAction.decrease) ||
-        (180 < intakeDuration && intakeDurationAction == IntakeDurationAction.increase)) {
+    if ((intakeDuration < 0 &&
+            intakeDurationAction == IntakeDurationAction.decrease) ||
+        (180 < intakeDuration &&
+            intakeDurationAction == IntakeDurationAction.increase)) {
       return;
     }
 
-    if (intakeDuration < 0 && intakeDurationAction == IntakeDurationAction.increase) {
+    if (intakeDuration < 0 &&
+        intakeDurationAction == IntakeDurationAction.increase) {
       intakeDuration = 0;
-    } else if (180 < intakeDuration && intakeDurationAction == IntakeDurationAction.decrease) {
+    } else if (180 < intakeDuration &&
+        intakeDurationAction == IntakeDurationAction.decrease) {
       intakeDuration = 180;
     }
 
@@ -298,11 +304,13 @@ class _CompressionRatioState extends State<CompressionRatio> {
                 children: [
                   IconActionButton(
                     icon: Icons.remove,
-                    action: () => changeIntakeDuration(IntakeDurationAction.decrease),
+                    action: () =>
+                        changeIntakeDuration(IntakeDurationAction.decrease),
                   ),
                   IconActionButton(
                     icon: Icons.add,
-                    action: () => changeIntakeDuration(IntakeDurationAction.increase),
+                    action: () =>
+                        changeIntakeDuration(IntakeDurationAction.increase),
                   ),
                 ],
               ),

@@ -34,12 +34,15 @@ class _CalculationHistoryState extends State<CalculationHistory> {
     }
 
     if (Storage.prefs?.getString('compression') == null) {
-      Storage.prefs?.setString('compression', jsonEncode(CompressionRatioModel()));
+      Storage.prefs
+          ?.setString('compression', jsonEncode(CompressionRatioModel()));
     }
 
     setState(() {
-      _portTiming = PortTimingModel.fromJson(jsonDecode((Storage.prefs?.getString('port'))!));
-      _compressionRatio = CompressionRatioModel.fromJson(jsonDecode((Storage.prefs?.getString('compression'))!));
+      _portTiming = PortTimingModel.fromJson(
+          jsonDecode((Storage.prefs?.getString('port'))!));
+      _compressionRatio = CompressionRatioModel.fromJson(
+          jsonDecode((Storage.prefs?.getString('compression'))!));
     });
   }
 
@@ -66,7 +69,8 @@ class _CalculationHistoryState extends State<CalculationHistory> {
   }
 
   void loadCompressionRatio() {
-    if (_compressionRatio.volume == 0 || _compressionRatio.compressionRatio == 0) {
+    if (_compressionRatio.volume == 0 ||
+        _compressionRatio.compressionRatio == 0) {
       showToastMessage('You must have calculation saved!');
       return;
     }
